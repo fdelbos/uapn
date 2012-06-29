@@ -54,7 +54,7 @@ static int parse_cmd(notification *n, int ac, char **av)
 	  else
 		current = current->next = xmalloc(sizeof(token));
 	  if(strlen(current->token = av[optind++]) != 64)
-		return error(ERROR_TOKEN -1);
+		return error(ERROR_TOKEN, -1);
 	}
   if(!n->cert_path)
 	return error(ERROR_CERT_MANDATORY, -1);
@@ -75,5 +75,6 @@ int main(int ac, char **av)
 
   if(parse_cmd(&n, ac, av))
 	  return -1;
+  send_notification(&n);
   return 0;
 }

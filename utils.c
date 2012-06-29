@@ -8,7 +8,7 @@
 
 #include "uapn.h"
 
-static error_msg errors[14] =
+static error_msg errors[16] =
   {
 	{ERROR_MEMORY,				"Can't alloc memory."},
 	{ERROR_JSON_SIZE,			"JSON payload size must be at most 256 bytes long."},
@@ -23,6 +23,8 @@ static error_msg errors[14] =
 	{ERROR_CERT_KEY_MISMATCH,	"Certificate and key don't match."},
 	{ERROR_SOCKET,				"Can't create socket."},
 	{ERROR_HOSTNAME,			"Can't resolve hostname."},
+	{ERROR_SSL_SOCKET,			"Can't create SSL socket."},
+	{ERROR_SSL_CONNECT,			"Could not connect to SSL server."},
 	{0, 0}
   };
 

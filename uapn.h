@@ -29,7 +29,15 @@
 #define ERROR_CERT_KEY_MISMATCH	10
 #define ERROR_SOCKET			11
 #define ERROR_HOSTNAME			12
+#define ERROR_CONNECT			13
+#define ERROR_SSL_SOCKET		14
+#define ERROR_SSL_CONNECT		15
 
+
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <openssl/ssl.h>
+#include <netinet/in.h>
 
 typedef struct t_error_msg
 {
@@ -51,5 +59,30 @@ typedef struct t_notification
   int	version;
   token *first_token;
 } notification;
+
+typedef struct s_ssl_connection
+{
+  SSL_CTX				*ctx;
+  SSL					*ssl;
+  SSL_METHOD			*method;
+  X509					*server_cert;
+  EVP_PKEY				*pkey;  
+  struct sockaddr_in	server_addr;
+  struct hostent		*host_info;
+  int					sock;
+} ssl_connection;
+
+/*
+**		NET.C
+*/
+int send_notification(notification *n);
+
+/*
+**		UTILS.C
+*/
+int error(char id, int return_value);
+int display_usage();
+void *xmalloc(size_t size);
+
 
 #endif
