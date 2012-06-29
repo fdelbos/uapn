@@ -8,7 +8,7 @@
 
 #include "uapn.h"
 
-static error_msg errors[16] =
+static error_msg errors[17] =
   {
 	{ERROR_MEMORY,				"Can't alloc memory."},
 	{ERROR_JSON_SIZE,			"JSON payload size must be at most 256 bytes long."},
@@ -25,6 +25,7 @@ static error_msg errors[16] =
 	{ERROR_HOSTNAME,			"Can't resolve hostname."},
 	{ERROR_SSL_SOCKET,			"Can't create SSL socket."},
 	{ERROR_SSL_CONNECT,			"Could not connect to SSL server."},
+	{ERROR_TOKEN_NOT_HEXA,		"Provided token is not a valid hexadecimal number."},
 	{0, 0}
   };
 
@@ -45,8 +46,8 @@ int error(char id, int return_value)
 int display_usage()
 {
   const char *usage = 
-	"usage: ./uapn -c rsa_client_cert -k rsa_clien_key "
-	"-j json_payload device_token ...\n";
+	"usage: ./uapn [-d] rsa_client_cert rsa_client_key "
+	"json_payload device_token [...]\n";
   fprintf(stderr, "%s", usage);
   return -1;
 }
@@ -58,4 +59,13 @@ void *xmalloc(size_t size)
   if(ptr == NULL)
 	exit(error(ERROR_MEMORY, -1));
   return ptr;
+}
+
+void to_lower(char *str)
+{
+  int i = 0;
+  
+  for(;str[i]; i++)
+	if(str[i] >= 'A' && str[i] <= 'Z')
+	  str[i] -= 32;
 }

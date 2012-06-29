@@ -16,6 +16,8 @@
 #define PRODUCTION				0
 #define	DEVELOPMENT				1
 
+#define TOKEN_SIZE				32
+
 #define ERROR_MEMORY			0
 #define ERROR_JSON_SIZE			1
 #define ERROR_TOKEN				2
@@ -32,12 +34,14 @@
 #define ERROR_CONNECT			13
 #define ERROR_SSL_SOCKET		14
 #define ERROR_SSL_CONNECT		15
+#define ERROR_TOKEN_NOT_HEXA	16
 
 
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <openssl/ssl.h>
 #include <netinet/in.h>
+
 
 typedef struct t_error_msg
 {
@@ -83,6 +87,7 @@ int send_notification(notification *n);
 int error(char id, int return_value);
 int display_usage();
 void *xmalloc(size_t size);
+void to_lower(char *str);
 
 
 #endif
