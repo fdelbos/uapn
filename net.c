@@ -7,6 +7,7 @@
 //
 
 #include <netdb.h>
+#include <arpa/inet.h>
 #include <openssl/ssl.h>
 
 #include "uapn.h"
