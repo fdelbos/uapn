@@ -8,29 +8,32 @@
 
 #include "uapn.h"
 
-static error_msg errors[17] =
+static error_msg errors[20] =
   {
-	{ERROR_MEMORY,				"Can't alloc memory."},
-	{ERROR_JSON_SIZE,			"JSON payload size must be at most 256 bytes long."},
-	{ERROR_TOKEN,				"Token string size must be exaclty 64 bytes long."},
-	{ERROR_CERT_MANDATORY,		"RSA certificate is mandatory."},
-	{ERROR_KEY_MANDATORY,		"RSA key is mandatory."},
-	{ERROR_JSON_MANDATORY,		"JSON payload is mandatory."},
-	{ERROR_NO_TOKEN,			"No token provided."},
-	{ERROR_SSL_CONTEXT,			"Could not get SSL context."},
-	{ERROR_INVALID_CERT,		"Invalid RSA certificate."},
-	{ERROR_INVALID_KEY,			"Invalid RSA key."},
-	{ERROR_CERT_KEY_MISMATCH,	"Certificate and key don't match."},
-	{ERROR_SOCKET,				"Can't create socket."},
-	{ERROR_HOSTNAME,			"Can't resolve hostname."},
-	{ERROR_SSL_SOCKET,			"Can't create SSL socket."},
-	{ERROR_SSL_CONNECT,			"Could not connect to SSL server."},
-	{ERROR_TOKEN_NOT_HEXA,		"Provided token is not a valid hexadecimal number."},
+	{UAPN_ERROR_JSON_SIZE,				"JSON payload size must be at most 256 bytes long."},
+	{UAPN_ERROR_TOKEN,					"Token string size must be exaclty 64 bytes long."},
+	{UAPN_ERROR_CERT_MANDATORY,			"RSA certificate is mandatory."},
+	{UAPN_ERROR_KEY_MANDATORY,			"RSA key is mandatory."},
+	{UAPN_ERROR_JSON_MANDATORY,			"JSON payload is mandatory."},
+	{UAPN_ERROR_NO_TOKEN,				"No token provided."},
+	{UAPN_ERROR_SSL_CONTEXT,			"Could not get SSL context."},
+	{UAPN_ERROR_INVALID_CERT,			"Invalid RSA certificate."},
+	{UAPN_ERROR_INVALID_KEY,			"Invalid RSA key."},
+	{UAPN_ERROR_CERT_KEY_MISMATCH,		"Certificate and key don't match."},
+	{UAPN_ERROR_SOCKET,					"Can't create socket."},
+	{UAPN_ERROR_HOSTNAME,				"Can't resolve hostname."},
+	{UAPN_ERROR_SSL_SOCKET,				"Can't create SSL socket."},
+	{UAPN_ERROR_SSL_CONNECT,			"Could not connect to SSL server."},
+	{UAPN_ERROR_TOKEN_NOT_HEXA,			"Provided token is not a valid hexadecimal number."},
+	{UAPN_ERROR_MEMORY,					"Can't alloc memory."},
+	{UAPN_ERROR_SOCKET_WRITE,			"SSL can't write notification on socket."},
+	{UAPN_ERROR_SSL_SHUTDOWN,			"SSL shutdown was not successful."},
+	{UAPN_ERROR_CLOSING_SOCKET,			"Network socket close error."},
 	{0, 0}
   };
 
 
-int error(char id, int return_value)
+int error(char id)
 {
   int i;
   
@@ -40,16 +43,7 @@ int error(char id, int return_value)
 		fprintf(stderr, "error: %s\n", errors[i].message);
 		break;
 	  }
-  return return_value;
-}
-
-int display_usage()
-{
-  const char *usage = 
-	"usage: ./uapn [-d] rsa_client_cert rsa_client_key "
-	"json_payload device_token [...]\n";
-  fprintf(stderr, "%s", usage);
-  return -1;
+  return id;
 }
 
 void *xmalloc(size_t size)
@@ -57,15 +51,16 @@ void *xmalloc(size_t size)
   void *ptr = malloc(size);
   
   if(ptr == NULL)
-	exit(error(ERROR_MEMORY, -1));
+	exit(error(UAPN_ERROR_MEMORY));
   return ptr;
 }
 
-void to_lower(char *str)
+char *to_lower(char *str)
 {
   int i = 0;
   
   for(;str[i]; i++)
 	if(str[i] >= 'A' && str[i] <= 'Z')
 	  str[i] -= 32;
+  return str;
 }

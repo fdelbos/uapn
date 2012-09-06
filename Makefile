@@ -1,5 +1,6 @@
 NAME	= 	uapn
-SRC		=	net.c		\
+SRC		=	message.c	\
+			net.c		\
 			uapn.c		\
 			utils.c
 
